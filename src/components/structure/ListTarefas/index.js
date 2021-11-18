@@ -5,7 +5,6 @@ import Card from "../Card";
 const ListTarefa = () => {
   // estado - memoria do componente
   const [tarefas, setTarefas] = useState([]);
-  // const [count, setCount] = useState(0);
 
   // UseEffect
   // criar o componente ou quando o componete ou o estado tem uma atualizacao.
@@ -14,8 +13,8 @@ const ListTarefa = () => {
   }, []);
 
   const getTarefas = async () => {
-    // const request = await fetch('http://localhost:3001')
-    const request = await fetch(`${process.env.REACT_APP_BACKEND}`);
+    const request = await fetch('http://localhost:3001')
+    // const request = await fetch(`${process.env.REACT_APP_BACKEND}`);
     // data = recebe os dados da api (musicas).
     const info = await request.json();
     // atualizo meu estado em memoria com as musicas - para atualizar no DOM.
@@ -24,8 +23,6 @@ const ListTarefa = () => {
 
   return (
     <div className="row row-cols-1 row-cols-md-3 mt-3 g-4">
-      {/* <button onClick={handleButton}>Incrementa</button>
-      <p>{count}</p> */}
       {tarefas.map((tarefa) => (
         <Card info={tarefa} key={tarefa._id} />
       ))}

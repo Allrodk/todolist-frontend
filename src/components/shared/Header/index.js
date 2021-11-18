@@ -1,8 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import "./index.css";
+
 const Header = () => {
   return (
-    <nav className="navbar  navbar-expand-lg navbar-light bg-primary w-100">
+    <nav className="navbar navbar-expand-lg navbar-light bg-dark w-100">
       <div className="container">
         <button
           className="navbar-toggler"

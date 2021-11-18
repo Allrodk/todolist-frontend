@@ -1,0 +1,16 @@
+.card-title, .card-group {
+  border: solid 1px lightblue;
+  border-radius: 5px 5px 0 0;
+  background-color: lightblue;
+  padding: 0 0.5rem 0 0.5rem;
+}
+.card-group {
+  display: flex;
+  flex-direction: column;  
+  border-radius: 0 0 5px 5px ;
+}
+
+.card-body {
+    border: 2px solid lightblue;
+    border-radius: 10px;
+  }
