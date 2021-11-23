@@ -1,51 +1,39 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Api from "../../Api";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import "./index.css";
 
-const Cadastro = () => {
+const Editar = () => {
   const navigate = useNavigate();
 
-  const handleSubmit = async (evento) => {
-    evento.preventDefault();
-    // target = quem disparou o evento
-    console.log(evento.target);
-    const titulo = evento.target.titulo.value;
-    const descricao = evento.target.descricao.value;
-    const prioridade = evento.target.prioridade.value;
-    const status = evento.target.status.value;
-    const prazo = evento.target.prazo.value;
-    const dataCriacao = evento.target.dataCriacao.value;
+  const [tarefa, setTarefa] = useState({
+    titulo: "",
+    descricao: "",
+    prioridade: "",
+    status: "",
+    prazo: "",
+    dataCriacao: "",
+  });
 
-    const tarefa = {
-      titulo,
-      descricao,
-      prioridade,
-      status,
-      prazo,
-      dataCriacao,
-    };
+  useEffect(() => {
+    getTarefaById();
+  }, []);
 
-    const request = await Api.fetchPost(tarefa);
-    if (request.status === 500) {
-      alert("ERRO NO SERVIDOR");
-    }
-    const result = await request.json();
-    if (result.error) {
-      console.log(result.error);
-    } else {
-      alert(result.message);
-      navigate("/");
-    }
+  const { id } = useParams();
+
+  //buscar a tarefa por id;
+  const getTarefaById = async () => {
+    const request = await Api.fetchGetById(id);
+    const tarefa = await request.json();
+    tarefa.dataCriacao = formatData(tarefa.dataCriacao);
+    setTarefa(tarefa);
   };
 
-  const dataAtual = formatData(new Date());
-  
   function formatData(formatada) {
     const dataAtual = new Date(formatada);
     const ano = dataAtual.getFullYear();
     let mes = digito2(dataAtual.getMonth() + 1);
-    let dia = digito2(dataAtual.getDate());
+    let dia = digito2(dataAtual.getDate() + 1);
     formatada = `${ano}-${mes}-${dia}`;
     return formatada;
   }
@@ -57,16 +45,31 @@ const Cadastro = () => {
     return digito;
   }
 
+  const handleFieldsChange = (evento) => {
+    const tarefaEditar = { ...tarefa };
+    tarefaEditar[evento.target.name] = evento.target.value;
+    console.log(tarefaEditar);
+    setTarefa(tarefaEditar);
+  };
+
+  const handleSubmit = async (evento) => {
+    evento.preventDefault();
+    const request = await Api.fetchPut(tarefa, id);
+    const data = await request.json();
+    alert(data.message);
+    navigate(`/detalhes/${id}`);
+  };
+
   function Voltar() {
-    navigate("/");
+    navigate(`/detalhes/${tarefa._id}`);
   }
 
   return (
     <div className="row">
-       <h1 className="text-center mt-3">Cadastro de Nova Tarefa</h1>
+         <h1 className="text-center mt-3">Editar Tarefa</h1>
       <div className="row-cols-1 row-cols-md-2 offset-md-3">
-        <div className="card-body">         
-          <form onSubmit={handleSubmit} className="card-group-cad">
+        <div className="card-body">          
+          <form onSubmit={handleSubmit} className="card-group-edit">
             <div className="card-element">
               <label htmlFor="titulo">Título da tarefa:</label>
               <input
@@ -74,6 +77,8 @@ const Cadastro = () => {
                 type="text"
                 placeholder="Título da tarefa"
                 name="titulo"
+                value={tarefa.titulo}
+                onChange={handleFieldsChange}
               />
             </div>
             <div className="card-element">
@@ -83,11 +88,18 @@ const Cadastro = () => {
                 type="text"
                 placeholder="Descricao da tarefa"
                 name="descricao"
+                value={tarefa.descricao}
+                onChange={handleFieldsChange}
               />
             </div>
             <div className="card-element">
               <label htmlFor="prioridade">Prioridade da tarefa:</label>
-              <select name="prioridade" id="prioridade">
+              <select
+                name="prioridade"
+                id="prioridade"
+                value={tarefa.prioridade}
+                onChange={handleFieldsChange}
+              >
                 <option value="baixa">Baixa</option>
                 <option value="media">Média</option>
                 <option value="baixa">Alta</option>
@@ -95,7 +107,12 @@ const Cadastro = () => {
             </div>
             <div className="card-element">
               <label htmlFor="status">Status da tarefa:</label>
-              <select name="status" id="status">
+              <select
+                name="status"
+                id="status"
+                value={tarefa.status}
+                onChange={handleFieldsChange}
+              >
                 <option value="fazer">Fazer</option>
                 <option value="fazendo">Fazendo</option>
                 <option value="feito">Feito</option>
@@ -109,6 +126,8 @@ const Cadastro = () => {
                 step="1"
                 placeholder="Prazo da tarefa em dias"
                 name="prazo"
+                value={tarefa.prazo}
+                onChange={handleFieldsChange}
               />
             </div>
             <div className="card-element">
@@ -119,13 +138,14 @@ const Cadastro = () => {
                 step="1"
                 placeholder="Início da tarefa"
                 name="dataCriacao"
-                defaultValue={dataAtual}
+                value={tarefa.dataCriacao}
+                onChange={handleFieldsChange}
               />
             </div>
             <div className="card-element">
               <div>
                 <button type="submit" className="btn btn-success">
-                  Cadastrar
+                  Editar
                 </button>
                 <button
                   type="button"
@@ -143,4 +163,4 @@ const Cadastro = () => {
   );
 };
 
-export default Cadastro;
+export default Editar;

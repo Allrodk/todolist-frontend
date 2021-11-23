@@ -5,6 +5,7 @@ body {
   font-family: 'Patrick Hand', cursive;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: lightgrey
 }
 
 code {
