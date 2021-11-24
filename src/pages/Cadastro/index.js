@@ -28,19 +28,20 @@ const Cadastro = () => {
 
     const request = await Api.fetchPost(tarefa);
     if (request.status === 500) {
-      alert("ERRO NO SERVIDOR");
-    }
-    const result = await request.json();
-    if (result.error) {
-      console.log(result.error);
+      alert("Todos os campos devem ser preenchidos!");
     } else {
-      alert(result.message);
-      navigate("/");
+      const result = await request.json();
+      if (result.error) {
+        console.log(result.error);
+      } else {
+        alert(result.message);
+        navigate("/");
+      }
     }
   };
 
   const dataAtual = formatData(new Date());
-  
+
   function formatData(formatada) {
     const dataAtual = new Date(formatada);
     const ano = dataAtual.getFullYear();
@@ -63,9 +64,9 @@ const Cadastro = () => {
 
   return (
     <div className="row">
-       <h1 className="text-center mt-3">Cadastro de Nova Tarefa</h1>
+      <h1 className="text-center mt-3">Cadastro de Nova Tarefa</h1>
       <div className="row-cols-1 row-cols-md-2 offset-md-3">
-        <div className="card-body">         
+        <div className="card-body">
           <form onSubmit={handleSubmit} className="card-group-cad">
             <div className="card-element">
               <label htmlFor="titulo">Título da tarefa:</label>
