@@ -11,7 +11,7 @@ const Card = (props) => {
     const ano = dataAtual.getFullYear();
     let mes = digito2(dataAtual.getMonth() + 1);
     let dia = digito2(dataAtual.getDate() + 1);
-    formatada = `${dia}-${mes}-${ano}`;
+    formatada = `${dia}/${mes}/${ano}`;
     return formatada;
   }
   function digito2(digito) {
